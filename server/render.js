@@ -34,7 +34,7 @@ export async function render (url, ctx = {}, {
   })
 
   const head = Head.rewind() || defaultHead()
-  const config = await getConfig(dir)
+  const config = getConfig(dir)
 
   const doc = createElement(Document, {
     html,
