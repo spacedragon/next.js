@@ -392,7 +392,6 @@ The following issues are currently being explored and input from the community i
 - Better JSX [[#22](https://github.com/zeit/next.js/issues/23)]
 - Custom server logic and routing [[#25](https://github.com/zeit/next.js/issues/25)]
 - Custom babel config [[#26](https://github.com/zeit/next.js/issues/26)]
-- Custom webpack config [[#40](https://github.com/zeit/next.js/issues/40)]
 
 ## Authors
 
