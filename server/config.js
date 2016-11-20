@@ -1,17 +1,6 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
 
-require('babel-register')({
-  only: /next\.config\.js$/,
-  presets: ['es2015', 'react'],
-  plugins: [
-    require.resolve('babel-plugin-transform-async-to-generator'),
-    require.resolve('babel-plugin-transform-object-rest-spread'),
-    require.resolve('babel-plugin-transform-class-properties'),
-    require.resolve('babel-plugin-transform-runtime')
-  ]
-})
-
 const cache = new Map()
 
 const defaultConfig = {
