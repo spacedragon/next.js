@@ -138,7 +138,7 @@ export default async function createCompiler (dir, { hotReload = false, dev = fa
     [errorDebugPath, 'dist/pages/_error-debug.js']
   ])
 
-  const webpackConfig = webpack({
+  let webpackConfig = {
     context: dir,
     entry,
     output: {
@@ -182,11 +182,11 @@ export default async function createCompiler (dir, { hotReload = false, dev = fa
     customInterpolateName: function (url, name, opts) {
       return interpolateNames.get(this.resourcePath) || url
     }
-  })
+  }
   const config = getConfig(dir)
   if (config.webpack) {
     console.log('> Using Webpack config function defined in next.config.js.')
-    return await config.webpack(webpackConfig, { hotReload, dev })
+    webpackConfig = await config.webpack(webpackConfig, { hotReload, dev })
   }
-  return webpackConfig
+  return webpack(webpackConfig)
 }
