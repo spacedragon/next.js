@@ -65,7 +65,7 @@ async function doRender (req, res, pathname, query, {
   })
 
   const head = Head.rewind() || defaultHead()
-  const config = await getConfig(dir)
+  const config = getConfig(dir)
 
   const doc = createElement(Document, {
     html,

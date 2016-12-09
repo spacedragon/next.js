@@ -1,9 +1,12 @@
 import { join } from 'path'
-import { readFile } from 'mz/fs'
+import { existsSync } from 'fs'
 
 const cache = new Map()
 
-const defaultConfig = { cdn: true }
+const defaultConfig = {
+  cdn: true,
+  webpack: null
+}
 
 export default function getConfig (dir) {
   if (!cache.has(dir)) {
@@ -12,22 +15,27 @@ export default function getConfig (dir) {
   return cache.get(dir)
 }
 
-async function loadConfig (dir) {
-  const path = join(dir, 'package.json')
+function loadConfig (dir) {
+  const path = join(dir, 'next.config.js')
+  const packagePath = join(dir, 'package.json')
 
-  let data
-  try {
-    data = await readFile(path, 'utf8')
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      data = '{}'
-    } else {
-      throw err
-    }
+  let userConfig = {}
+  let packageConfig = null
+
+  const userHasConfig = existsSync(path)
+  if (userHasConfig) {
+    const userConfigModule = require(path)
+    userConfig = userConfigModule.default || userConfigModule
   }
 
-  // no try-cache, it must be a valid json
-  const config = JSON.parse(data).next || {}
+  const userHasPackageConfig = existsSync(packagePath)
+  if (userHasPackageConfig) {
+    packageConfig = require(packagePath).next
+  }
 
-  return Object.assign({}, defaultConfig, config)
+  if (packageConfig) {
+    console.warn("> [warn] You're using package.json as source of config for next.js. Use next.config.js instead.")
+  }
+
+  return Object.assign({}, defaultConfig, userConfig, packageConfig || {})
 }
