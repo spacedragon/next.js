@@ -3,12 +3,12 @@ import webpackDevMiddleware from 'webpack-dev-middleware'
 import webpackHotMiddleware from 'webpack-hot-middleware'
 import isWindowsBash from 'is-windows-bash'
 import webpack from './build/webpack'
+import clean from './build/clean'
 import read from './read'
 
 export default class HotReloader {
-  constructor (dir, dev = false) {
+  constructor (dir) {
     this.dir = dir
-    this.dev = dev
     this.middlewares = []
     this.webpackDevMiddleware = null
     this.webpackHotMiddleware = null
@@ -38,7 +38,10 @@ export default class HotReloader {
   }
 
   async prepareMiddlewares () {
-    const compiler = await webpack(this.dir, { hotReload: true, dev: this.dev })
+    const [compiler] = await Promise.all([
+      webpack(this.dir, { dev: true }),
+      clean(this.dir)
+    ])
 
     compiler.plugin('after-emit', (compilation, callback) => {
       const { assets } = compilation
